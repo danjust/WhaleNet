@@ -1,9 +1,13 @@
+"""Contains a class to generate a datapipeline"""
+
+
 import tensorflow as tf
 import numpy as np
 import os
 
 
 class datapipeline():
+    """Class for a datapipeline based on tensorflow's dataset API"""
     def __init__(self, datadir, labels, batchsize):
         self.datadir = datadir
         self.labels = labels
@@ -11,6 +15,7 @@ class datapipeline():
 
 
     def parse_function(self,files):
+        """Function to map filenames to images"""
         # First image
         image_string = tf.read_file(files[0])
         image1 = tf.image.decode_jpeg(image_string,channels=3)
@@ -31,6 +36,10 @@ class datapipeline():
 
 
     def generator_fct(self):
+        """Generator function. Creates filenames of images.
+        With 50% probability different images of same class,
+        with 50% probability images of different classes.
+        """
         same = np.random.randint(2)
         if same == 1:    # same whale
             f1 = np.random.choice(self.labels[self.labels['Id_c'].str.startswith('new')==False]['Id_c'])
@@ -48,6 +57,7 @@ class datapipeline():
 
 
     def build(self):
+        """Build datapipeline"""
         dataset = tf.data.Dataset.from_generator(
                 self.generator_fct,
                 output_types= (tf.string),
