@@ -1,7 +1,13 @@
+"""Convolutional neural nets as branch of a siamese network"""
+
+
 import tensorflow as tf
 
 
 def WhaleCNN(inputs,reuse=False):
+    """Standard CNN designed for 256x512 pixel images
+    Returns 2048-dimensional festure vector
+    """
     # input is 256x512x3
     with tf.variable_scope('conv1',reuse=reuse):
         conv1 = tf.layers.conv2d(inputs = inputs,

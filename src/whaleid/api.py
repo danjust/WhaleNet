@@ -1,3 +1,6 @@
+"""API to create a siamese net model"""
+
+
 import tensorflow as tf
 import numpy as np
 import os
@@ -5,6 +8,7 @@ from whaleid import convnets
 
 
 class whalenet():
+    """Model class"""
     def __init__(self, iterator, learning_rate, model_name,
                  convnet=convnets.WhaleCNN):
         self.iterator = iterator
@@ -27,6 +31,9 @@ class whalenet():
 
     @property
     def results_diff(self):
+        """Creates two identical CNNs and
+        returns difference of output features
+        """
         if self._results_diff is None:
 
             features1 = self.convnet(self.img1, reuse=False)
@@ -39,6 +46,7 @@ class whalenet():
 
     @property
     def contrastive_loss(self, margin=1):
+        """Contrastive loss function for siamese networks"""
         if self._contrastive_loss is None:
             self._contrastive_loss = (
                 tf.reduce_mean((1-self.target_diff)*self.results_diff**2 / 2
@@ -47,6 +55,7 @@ class whalenet():
 
     @property
     def train_op(self):
+        """Function to create training operation with Adam optimizer"""
         if self._train_op is None:
             opt = tf.train.AdamOptimizer(
                 learning_rate = self.learning_rate)
@@ -65,8 +74,12 @@ class whalenet():
 
 
     def train(self, trainsteps=5000, printstep=500):
-        # _train_op = self.train_op               # build the model
-        # _results_diff = self.results_diff
+        """Trains model and saves to checkpoints
+        arguments:
+            trainsteps: number of training steps (int)
+            printstep: output/summary after this number of steps (int)
+        """
+        _train_op = self.train_op               # build the model
 
         try:
             os.mkdir('./checkpoints/%s' %self.model_name)
