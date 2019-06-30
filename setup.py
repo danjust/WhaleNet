@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
-    name="whaleid",
+    name="trainer",
     version="0.0.1",
-    packages=['whaleid'],
-    package_dir={'whaleid': 'src/whaleid'},
+    packages=find_packages(),
+    include_package_data=True
 )

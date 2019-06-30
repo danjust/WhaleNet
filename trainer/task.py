@@ -1,8 +1,8 @@
 import argparse
 import pandas as pd
 
-from whaleid import model
-from whaleid import datatools
+from trainer import model
+from trainer import datatools
 
 def train_model():
     parser = argparse.ArgumentParser()
